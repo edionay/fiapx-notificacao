@@ -34,6 +34,21 @@ As variáveis ficam em [`.env.example`](.env.example):
 | `SMTP_HOST` | `localhost` | Host do servidor SMTP. |
 | `SMTP_PORT` | `1025` | Porta do servidor SMTP. |
 | `EMAIL_REMETENTE` | `nao-responda@fiapx.local` | Endereço usado como remetente. |
+| `METRICS_PORT` | `9091` | Porta do servidor HTTP que expõe as métricas. |
+
+## Métricas (Prometheus)
+
+O serviço sobe um servidor HTTP que expõe métricas no formato do Prometheus em `/metrics`
+(porta configurável por `METRICS_PORT`):
+
+```bash
+curl http://localhost:9091/metrics
+```
+
+Além das métricas padrão do Node (memória, CPU, event loop e coletor de lixo), o serviço
+publica `notificacoes_processadas_total` com o rótulo `resultado` (`enviada`, `ignorada` ou
+`erro`). Todas as séries levam o rótulo `service="fiapx-notificacao"`. O scrape e os
+dashboards ficam no [`fiapx-infra`](https://github.com/edionay/fiapx-infra).
 
 ## Scripts
 
@@ -92,9 +107,11 @@ src/
 │   └── enviar-notificacao.ts # caso de uso
 └── adaptadores/
     ├── email/                # envio por SMTP (nodemailer)
-    └── mensageria/           # consumo do RabbitMQ
+    ├── mensageria/           # consumo do RabbitMQ
+    └── metricas/             # registro e servidor HTTP de métricas
 test/
 ├── aplicacao/                # teste unitário do caso de uso
 ├── email/                    # envio SMTP contra servidor em memória
-└── mensageria/               # integração com o RabbitMQ (roda com RABBITMQ_URL)
+├── mensageria/               # integração com o RabbitMQ (roda com RABBITMQ_URL)
+└── metricas/                 # servidor de métricas
 ```
