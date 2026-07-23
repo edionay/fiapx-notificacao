@@ -14,4 +14,5 @@ export const env = {
   smtpHost: process.env.SMTP_HOST ?? "localhost",
   smtpPort: lerPorta(process.env.SMTP_PORT, 1025),
   emailRemetente: process.env.EMAIL_REMETENTE ?? "nao-responda@fiapx.local",
+  metricsPort: lerPorta(process.env.METRICS_PORT, 9091),
 };
