@@ -12,6 +12,24 @@ concurrency:
 jobs:
   test:
     runs-on: ubuntu-latest
+
+    services:
+      rabbitmq:
+        image: rabbitmq:3-management
+        env:
+          RABBITMQ_DEFAULT_USER: fiapx
+          RABBITMQ_DEFAULT_PASS: fiapx
+        ports:
+          - 5672:5672
+        options: >-
+          --health-cmd "rabbitmq-diagnostics ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
+
+    env:
+      RABBITMQ_URL: amqp://fiapx:fiapx@localhost:5672
+
     steps:
       - uses: actions/checkout@v4
 
