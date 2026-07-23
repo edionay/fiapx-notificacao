@@ -18,4 +18,5 @@ COPY package.json ./
 COPY --from=prod-deps /app/node_modules ./node_modules
 COPY --from=build /app/dist ./dist
 USER node
+EXPOSE 9091
 CMD ["node", "dist/server.js"]
